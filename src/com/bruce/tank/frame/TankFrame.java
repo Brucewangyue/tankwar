@@ -9,16 +9,19 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TankFrame extends Frame {
-    static final int GAME_WIDTH = 800;
-    static final int GAME_HEIGHT = 600;
+    public static final int GAME_WIDTH = 800;
+    public static final int GAME_HEIGHT = 600;
 
-    private Tank myTank = new Tank(200, 200, DirectionEnum.DOWN);
-    private Bullet b = new Bullet(300, 300, DirectionEnum.DOWN);
+    private Tank myTank = new Tank(200, 200, DirectionEnum.DOWN, this);
+    public List<Bullet> bullets = new ArrayList<>();
 
     public TankFrame() throws HeadlessException {
         this.setSize(GAME_WIDTH, GAME_HEIGHT);
+        this.setResizable(false);
         this.setTitle("坦克大战");
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -38,8 +41,25 @@ public class TankFrame extends Frame {
      */
     @Override
     public void paint(Graphics g) {
+        paintBulletCountText(g);
         myTank.paint(g);
-        b.paint(g);
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
+
+        // 安全删除集合2
+//        for(Iterator<Bullet> it = bullets.iterator(); it.hasNext();){
+//            Bullet next = it.next();
+//            if(next.living)
+//                bullets.remove(next);
+//        }
+    }
+
+    private void paintBulletCountText(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("主坦克发射了 " + bullets.size() + " 颗子弹", 20, 50);
+        g.setColor(c);
     }
 
     /**
@@ -49,6 +69,7 @@ public class TankFrame extends Frame {
 
     /**
      * 在 paint 之前调用
+     *
      * @param g
      */
     @Override
@@ -109,6 +130,9 @@ public class TankFrame extends Frame {
                     break;
                 case KeyEvent.VK_DOWN:
                     bD = false;
+                    break;
+                case KeyEvent.VK_SPACE:
+                    myTank.fire();
                     break;
                 default:
                     break;
