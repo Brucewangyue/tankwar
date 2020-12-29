@@ -1,6 +1,6 @@
 package com.bruce.tank;
 
-import com.bruce.tank.util.TankFrame;
+import com.bruce.tank.frame.TankFrame;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
