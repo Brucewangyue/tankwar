@@ -11,11 +11,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class TankFrame extends Frame {
+    static final int GAME_WIDTH = 800;
+    static final int GAME_HEIGHT = 600;
+
     private Tank myTank = new Tank(200, 200, DirectionEnum.DOWN);
-    private Bullet b = new Bullet(300,300,DirectionEnum.DOWN);
+    private Bullet b = new Bullet(300, 300, DirectionEnum.DOWN);
 
     public TankFrame() throws HeadlessException {
-        this.setSize(600, 500);
+        this.setSize(GAME_WIDTH, GAME_HEIGHT);
         this.setTitle("坦克大战");
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -37,6 +40,29 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         myTank.paint(g);
         b.paint(g);
+    }
+
+    /**
+     * 图片
+     */
+    Image offScreenImage = null;
+
+    /**
+     * 在 paint 之前调用
+     * @param g
+     */
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+        // 先在内存中画
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(new Color(13, 17, 23));
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        // 从内存中一次性显示
+        g.drawImage(offScreenImage, 0, 0, null);
     }
 
     class MyKeyListener extends KeyAdapter {
