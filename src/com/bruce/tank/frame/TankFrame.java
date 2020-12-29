@@ -1,5 +1,9 @@
 package com.bruce.tank.frame;
 
+import com.bruce.tank.core.Bullet;
+import com.bruce.tank.core.Tank;
+import com.bruce.tank.enums.DirectionEnum;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -7,18 +11,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class TankFrame extends Frame {
-    private int moveLength = 2;
-
-    private boolean bL = false;
-    private boolean bR = false;
-    private boolean bU = false;
-    private boolean bD = false;
-
-    private int x = 200;
-    private int y = 200;
+    private Tank myTank = new Tank(200, 200, DirectionEnum.DOWN);
+    private Bullet b = new Bullet(300,300,DirectionEnum.DOWN);
 
     public TankFrame() throws HeadlessException {
-        this.setSize(600, 400);
+        this.setSize(600, 500);
         this.setTitle("坦克大战");
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -26,9 +23,7 @@ public class TankFrame extends Frame {
                 System.exit(0);
             }
         });
-
         this.addKeyListener(new MyKeyListener());
-
         this.setVisible(true);
     }
 
@@ -40,42 +35,37 @@ public class TankFrame extends Frame {
      */
     @Override
     public void paint(Graphics g) {
-        System.out.println("L:" + bL + ",R:" + bR + ",U:" + bU + ",D:" + bD);
-        g.fillRect(x, y, 50, 50);
+        myTank.paint(g);
+        b.paint(g);
     }
 
     class MyKeyListener extends KeyAdapter {
+        private boolean bL = false;
+        private boolean bR = false;
+        private boolean bU = false;
+        private boolean bD = false;
+
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             switch (key) {
                 case KeyEvent.VK_LEFT:
-//                    x -= moveLength;
                     bL = true;
                     break;
                 case KeyEvent.VK_RIGHT:
-//                    x += moveLength;
                     bR = true;
                     break;
                 case KeyEvent.VK_UP:
-//                    y -= moveLength;
                     bU = true;
                     break;
                 case KeyEvent.VK_DOWN:
-//                    y += moveLength;
                     bD = true;
+                    break;
+                default:
                     break;
             }
 
-            if(bL)
-                x -= moveLength;
-            if(bR)
-                x += moveLength;
-            if(bU)
-                y -= moveLength;
-            if(bD)
-                y += moveLength;
-
+            setDirection();
             repaint();
         }
 
@@ -94,8 +84,23 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_DOWN:
                     bD = false;
                     break;
+                default:
+                    break;
             }
+
+            setDirection();
             repaint();
+        }
+
+        private void setDirection() {
+            if (!bL && !bR && !bU && !bD) myTank.setMoving(false);
+            else {
+                if (bL) myTank.setDir(DirectionEnum.LEFT);
+                if (bR) myTank.setDir(DirectionEnum.RIGHT);
+                if (bU) myTank.setDir(DirectionEnum.UP);
+                if (bD) myTank.setDir(DirectionEnum.DOWN);
+                myTank.setMoving(true);
+            }
         }
     }
 }
