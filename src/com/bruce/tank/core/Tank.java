@@ -1,21 +1,29 @@
 package com.bruce.tank.core;
 
 import com.bruce.tank.enums.DirectionEnum;
+import com.bruce.tank.enums.GroupEnum;
 import com.bruce.tank.frame.TankFrame;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Tank {
-    private TankFrame tankFrame;
+    private final TankFrame tankFrame;
     private DirectionEnum dir;
-    private boolean isMoving = false;
+    private boolean moving = false;
+    private boolean living = true;
+    private final int moveLength = 2;
+    private final Random randomFire = new Random();
+    private final GroupEnum groupEnum;
+    private int x;
+    private int y;
 
-    public boolean isMoving() {
-        return isMoving;
+    public GroupEnum getGroupEnum() {
+        return groupEnum;
     }
 
     public void setMoving(boolean moving) {
-        isMoving = moving;
+        this.moving = moving;
     }
 
     public DirectionEnum getDir() {
@@ -26,28 +34,51 @@ public class Tank {
         this.dir = dir;
     }
 
-    private final int moveLength = 2;
+    public int getX() {
+        return x;
+    }
 
-    private int x = 200;
-    private int y = 200;
+    public int getY() {
+        return y;
+    }
 
-    public Tank(int x, int y, DirectionEnum dir, TankFrame tankFrame) {
+    public Tank(int x, int y, DirectionEnum dir, TankFrame tankFrame, GroupEnum groupEnum) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.tankFrame = tankFrame;
+        this.groupEnum = groupEnum;
     }
 
     public void paint(Graphics g) {
-        Color originColor = g.getColor();
-        g.setColor(new Color(176,114,25));
-        g.fillRect(x, y, 50, 50);
-        g.setColor(originColor);
+        if (!living) {
+            tankFrame.enemyTanks.remove(this);
+            return;
+        }
+        ;
+
+        if (randomFire.nextInt(10) > 8) fire();
+
+        switch (dir) {
+            case LEFT:
+                g.drawImage(SrcMgr.tankL, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(SrcMgr.tankR, x, y, null);
+                break;
+            case UP:
+                g.drawImage(SrcMgr.tankU, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(SrcMgr.tankD, x, y, null);
+                break;
+        }
+
         move();
     }
 
     private void move() {
-        if (!isMoving) return;
+        if (!moving) return;
 
         switch (dir) {
             case LEFT:
@@ -66,6 +97,13 @@ public class Tank {
     }
 
     public void fire() {
-        tankFrame.bullets.add(new Bullet(x, y, getDir(),tankFrame));
+        int bX = x + SrcMgr.tankWidth / 2 - SrcMgr.bulletWidth / 2;
+        int bY = y + SrcMgr.tankHeight / 2 - SrcMgr.bulletHeight / 2;
+
+        tankFrame.bullets.add(new Bullet(bX, bY, getDir(), tankFrame, groupEnum));
+    }
+
+    public void die() {
+        living = false;
     }
 }

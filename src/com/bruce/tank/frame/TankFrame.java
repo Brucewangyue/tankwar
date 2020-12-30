@@ -2,7 +2,9 @@ package com.bruce.tank.frame;
 
 import com.bruce.tank.core.Bullet;
 import com.bruce.tank.core.Tank;
+import com.bruce.tank.core.TankExplode;
 import com.bruce.tank.enums.DirectionEnum;
+import com.bruce.tank.enums.GroupEnum;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -16,8 +18,11 @@ public class TankFrame extends Frame {
     public static final int GAME_WIDTH = 800;
     public static final int GAME_HEIGHT = 600;
 
-    private Tank myTank = new Tank(200, 200, DirectionEnum.DOWN, this);
+    private Tank myTank = new Tank(200, 200, DirectionEnum.UP, this, GroupEnum.Friend);
     public List<Bullet> bullets = new ArrayList<>();
+    public List<Tank> enemyTanks = new ArrayList<>();
+    public List<TankExplode> tankExplodes = new ArrayList<>();
+    public TankExplode textTankExplode = new TankExplode(400,200,this);
 
     public TankFrame() throws HeadlessException {
         this.setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -42,11 +47,26 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         paintBulletCountText(g);
+        paintEnemyTankCountText(g);
         myTank.paint(g);
+
+        // bullets
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
         }
 
+        // enemy tanks
+        for (int i = 0; i < enemyTanks.size(); i++) {
+            enemyTanks.get(i).paint(g);
+        }
+
+        // bullet collide tank
+        for (int i = 0; i < bullets.size(); i++) {
+            for (int j = 0; j < enemyTanks.size(); j++)
+                bullets.get(i).collideEnemyTank(enemyTanks.get(j));
+        }
+
+        textTankExplode.paint(g);
         // 安全删除集合2
 //        for(Iterator<Bullet> it = bullets.iterator(); it.hasNext();){
 //            Bullet next = it.next();
@@ -59,6 +79,13 @@ public class TankFrame extends Frame {
         Color c = g.getColor();
         g.setColor(Color.WHITE);
         g.drawString("主坦克发射了 " + bullets.size() + " 颗子弹", 20, 50);
+        g.setColor(c);
+    }
+
+    private void paintEnemyTankCountText(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("敌方坦克发数量 " + enemyTanks.size() , 20, 70);
         g.setColor(c);
     }
 
