@@ -4,7 +4,6 @@ import com.bruce.tank.enums.DirectionEnum;
 import com.bruce.tank.frame.TankFrame;
 
 import java.awt.*;
-import java.security.PublicKey;
 
 public class Tank {
     private TankFrame tankFrame;
