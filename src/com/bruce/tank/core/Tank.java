@@ -17,6 +17,7 @@ public class Tank {
     private final GroupEnum groupEnum;
     private int x;
     private int y;
+    public Rectangle rectangle = new Rectangle();
 
     public GroupEnum getGroupEnum() {
         return groupEnum;
@@ -48,14 +49,20 @@ public class Tank {
         this.dir = dir;
         this.tankFrame = tankFrame;
         this.groupEnum = groupEnum;
+        this.rectangle.x = x;
+        this.rectangle.y = y;
+        this.rectangle.width = SrcMgr.tankWidth;
+        this.rectangle.height = SrcMgr.tankHeight;
     }
 
     public void paint(Graphics g) {
-        detectLiving();
+        if (!detectLiving()) return;
+
         randomDir();
-        paintTankDirImage(g);
+        paintImage(g);
         randomFire();
         move();
+        updateRectangle();
     }
 
     private void move() {
@@ -75,6 +82,12 @@ public class Tank {
                 y += moveLength;
                 break;
         }
+
+        // boundary detection
+        if (x < 2) x = 0;
+        if (y < 32) y = 32; // windows top bar height 30
+        if (x > TankFrame.GAME_WIDTH - SrcMgr.tankWidth - 2) x = TankFrame.GAME_WIDTH - SrcMgr.tankWidth - 2;
+        if (y > TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2) x = TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2;
     }
 
     public void fire() {
@@ -98,7 +111,7 @@ public class Tank {
             fire();
     }
 
-    private void paintTankDirImage(Graphics g) {
+    private void paintImage(Graphics g) {
         switch (dir) {
             case LEFT:
                 g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankL : SrcMgr.enemyTankL, x, y, null);
@@ -115,10 +128,17 @@ public class Tank {
         }
     }
 
-    private void detectLiving() {
+    private boolean detectLiving() {
         if (!living) {
             tankFrame.enemyTanks.remove(this);
-            return;
+            return false;
         }
+
+        return true;
+    }
+
+    private void updateRectangle() {
+        this.rectangle.x = x;
+        this.rectangle.y = y;
     }
 }

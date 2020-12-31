@@ -1,5 +1,6 @@
 package com.bruce.tank;
 
+import com.bruce.tank.core.PropertiesMgr;
 import com.bruce.tank.core.Tank;
 import com.bruce.tank.enums.DirectionEnum;
 import com.bruce.tank.enums.GroupEnum;
@@ -9,7 +10,8 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         TankFrame f = new TankFrame();
 
-        for (int i = 0; i < 5; i++) {
+        int tankCount = Integer.parseInt((String) PropertiesMgr.get("init-tank-count"));
+        for (int i = 0; i < tankCount; i++) {
             f.enemyTanks.add(new Tank(300 + i * 50, 300, DirectionEnum.DOWN, f, GroupEnum.Enemy));
         }
 
