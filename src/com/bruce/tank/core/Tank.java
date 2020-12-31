@@ -84,10 +84,10 @@ public class Tank {
         }
 
         // boundary detection
-        if (x < 2) x = 0;
+        if (x < 2) x = 2;
         if (y < 32) y = 32; // windows top bar height 30
         if (x > TankFrame.GAME_WIDTH - SrcMgr.tankWidth - 2) x = TankFrame.GAME_WIDTH - SrcMgr.tankWidth - 2;
-        if (y > TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2) x = TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2;
+        if (y > TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2) y = TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2;
     }
 
     public void fire() {
