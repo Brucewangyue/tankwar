@@ -88,34 +88,34 @@ public class Tank {
         living = false;
     }
 
-    private void randomDir(){
-        if(groupEnum == GroupEnum.Enemy && random.nextInt(100)>97)
+    private void randomDir() {
+        if (groupEnum == GroupEnum.Enemy && random.nextInt(100) > 97)
             dir = DirectionEnum.values()[random.nextInt(4)];
     }
 
-    private void randomFire(){
-        if(groupEnum == GroupEnum.Enemy && random.nextInt(100)>97)
+    private void randomFire() {
+        if (groupEnum == GroupEnum.Enemy && random.nextInt(100) > 97)
             fire();
     }
 
-    private void paintTankDirImage(Graphics g){
+    private void paintTankDirImage(Graphics g) {
         switch (dir) {
             case LEFT:
-                g.drawImage(SrcMgr.tankL, x, y, null);
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankL : SrcMgr.enemyTankL, x, y, null);
                 break;
             case RIGHT:
-                g.drawImage(SrcMgr.tankR, x, y, null);
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankR : SrcMgr.enemyTankR, x, y, null);
                 break;
             case UP:
-                g.drawImage(SrcMgr.tankU, x, y, null);
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankU : SrcMgr.enemyTankU, x, y, null);
                 break;
             case DOWN:
-                g.drawImage(SrcMgr.tankD, x, y, null);
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankD : SrcMgr.enemyTankD, x, y, null);
                 break;
         }
     }
 
-    private void detectLiving(){
+    private void detectLiving() {
         if (!living) {
             tankFrame.enemyTanks.remove(this);
             return;

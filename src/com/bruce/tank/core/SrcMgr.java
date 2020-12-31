@@ -9,6 +9,7 @@ import java.io.IOException;
 public class SrcMgr {
     private static final String imagePath = "images/";
     public static BufferedImage tankD, tankU, tankL, tankR;
+    public static BufferedImage enemyTankD, enemyTankU, enemyTankL, enemyTankR;
     public static BufferedImage bulletD, bulletU, bulletL, bulletR;
     public static int bulletWidth, bulletHeight;
     public static int tankWidth, tankHeight;
@@ -34,6 +35,11 @@ public class SrcMgr {
             tankD = ImageUtil.rotateImage(tankU, 180);
             tankL = ImageUtil.rotateImage(tankU, -90);
             tankR = ImageUtil.rotateImage(tankU, 90);
+
+            enemyTankU = ImageIO.read(cl.getResourceAsStream(imagePath + "BadTank1.png"));
+            enemyTankD = ImageUtil.rotateImage(enemyTankU, 180);
+            enemyTankL = ImageUtil.rotateImage(enemyTankU, -90);
+            enemyTankR = ImageUtil.rotateImage(enemyTankU, 90);
 
             bulletU = ImageIO.read(cl.getResourceAsStream(imagePath + "BulletU.png"));
             bulletD = ImageUtil.rotateImage(bulletU, 180);
