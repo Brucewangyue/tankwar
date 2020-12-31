@@ -10,7 +10,6 @@ public class TankExplode {
     private int x;
     private int y;
     private final TankFrame tankFrame;
-    private boolean living = true;
     private int step = 0;
 
     public TankExplode(int x, int y, TankFrame tankFrame) {
@@ -20,14 +19,9 @@ public class TankExplode {
     }
 
     public void paint(Graphics g) {
-        g.drawImage(SrcMgr.tankExplodeImages[step], x, y, null);
-        step++;
+        g.drawImage(SrcMgr.tankExplodeImages[step++], x, y, null);
         if (step == SrcMgr.tankExplodeImages.length)
-            step = 0;
+            tankFrame.tankExplodes.remove(this);
     }
 
-
-    private void die() {
-        living = false;
-    }
 }

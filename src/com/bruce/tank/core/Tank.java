@@ -13,7 +13,7 @@ public class Tank {
     private boolean moving = false;
     private boolean living = true;
     private final int moveLength = 2;
-    private final Random randomFire = new Random();
+    private final Random random = new Random();
     private final GroupEnum groupEnum;
     private int x;
     private int y;
@@ -51,34 +51,15 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if (!living) {
-            tankFrame.enemyTanks.remove(this);
-            return;
-        }
-        ;
-
-        if (randomFire.nextInt(10) > 8) fire();
-
-        switch (dir) {
-            case LEFT:
-                g.drawImage(SrcMgr.tankL, x, y, null);
-                break;
-            case RIGHT:
-                g.drawImage(SrcMgr.tankR, x, y, null);
-                break;
-            case UP:
-                g.drawImage(SrcMgr.tankU, x, y, null);
-                break;
-            case DOWN:
-                g.drawImage(SrcMgr.tankD, x, y, null);
-                break;
-        }
-
+        detectLiving();
+        randomDir();
+        paintTankDirImage(g);
+        randomFire();
         move();
     }
 
     private void move() {
-        if (!moving) return;
+        if (!moving && groupEnum == GroupEnum.Friend) return;
 
         switch (dir) {
             case LEFT:
@@ -105,5 +86,39 @@ public class Tank {
 
     public void die() {
         living = false;
+    }
+
+    private void randomDir(){
+        if(groupEnum == GroupEnum.Enemy && random.nextInt(100)>97)
+            dir = DirectionEnum.values()[random.nextInt(4)];
+    }
+
+    private void randomFire(){
+        if(groupEnum == GroupEnum.Enemy && random.nextInt(100)>97)
+            fire();
+    }
+
+    private void paintTankDirImage(Graphics g){
+        switch (dir) {
+            case LEFT:
+                g.drawImage(SrcMgr.tankL, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(SrcMgr.tankR, x, y, null);
+                break;
+            case UP:
+                g.drawImage(SrcMgr.tankU, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(SrcMgr.tankD, x, y, null);
+                break;
+        }
+    }
+
+    private void detectLiving(){
+        if (!living) {
+            tankFrame.enemyTanks.remove(this);
+            return;
+        }
     }
 }

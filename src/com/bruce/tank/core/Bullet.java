@@ -67,13 +67,18 @@ public class Bullet {
     }
 
     public void collideEnemyTank(Tank tank) {
-        if(groupEnum == tank.getGroupEnum()) return;
+        if (groupEnum == tank.getGroupEnum()) return;
 
         Rectangle bulletRectangle = new Rectangle(x, y, SrcMgr.bulletWidth, SrcMgr.bulletHeight);
         Rectangle tankRectangle = new Rectangle(tank.getX(), tank.getY(), SrcMgr.tankWidth, SrcMgr.tankHeight);
         if (bulletRectangle.intersects(tankRectangle)) {
             die();
             tank.die();
+
+            // 在坦克中心爆炸
+            int explodeX = tank.getX() + SrcMgr.tankWidth / 2 - SrcMgr.tankExplodeWidth / 2;
+            int explodeY = tank.getY() + SrcMgr.tankHeight / 2 - SrcMgr.tankExplodeHeight / 2;
+            tankFrame.tankExplodes.add(new TankExplode(explodeX, explodeY, tankFrame));
         }
     }
 

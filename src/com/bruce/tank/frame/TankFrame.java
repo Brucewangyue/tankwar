@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TankFrame extends Frame {
@@ -22,7 +23,6 @@ public class TankFrame extends Frame {
     public List<Bullet> bullets = new ArrayList<>();
     public List<Tank> enemyTanks = new ArrayList<>();
     public List<TankExplode> tankExplodes = new ArrayList<>();
-    public TankExplode textTankExplode = new TankExplode(400,200,this);
 
     public TankFrame() throws HeadlessException {
         this.setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -60,14 +60,18 @@ public class TankFrame extends Frame {
             enemyTanks.get(i).paint(g);
         }
 
-        // bullet collide tank
+        // tank explode
+        for (int i = 0; i < tankExplodes.size(); i++) {
+            tankExplodes.get(i).paint(g);
+        }
+
+        // bullet collide tank detect
         for (int i = 0; i < bullets.size(); i++) {
             for (int j = 0; j < enemyTanks.size(); j++)
                 bullets.get(i).collideEnemyTank(enemyTanks.get(j));
         }
 
-        textTankExplode.paint(g);
-        // 安全删除集合2
+        // 安全删除集合方案2
 //        for(Iterator<Bullet> it = bullets.iterator(); it.hasNext();){
 //            Bullet next = it.next();
 //            if(next.living)
