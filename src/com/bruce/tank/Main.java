@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         TankFrame f = new TankFrame();
 
-        int tankCount = Integer.parseInt((String) PropertiesMgr.get("init-tank-count"));
+        int tankCount = PropertiesMgr.getInteger("init-tank-count");
         for (int i = 0; i < tankCount; i++) {
             f.enemyTanks.add(new Tank(300 + i * 50, 300, DirectionEnum.DOWN, f, GroupEnum.Enemy));
         }

@@ -12,7 +12,7 @@ public class Tank {
     private DirectionEnum dir;
     private boolean moving = false;
     private boolean living = true;
-    private final int moveLength = 2;
+    private final int moveLength = PropertiesMgr.getInteger("tank-move-speed");
     private final Random random = new Random();
     private final GroupEnum groupEnum;
     private int x;

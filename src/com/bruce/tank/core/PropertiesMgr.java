@@ -24,4 +24,14 @@ public class PropertiesMgr {
             }
         return o;
     }
+
+    public static Integer getInteger(String key) {
+        Integer o = Integer.parseInt((String) get(key));
+        return o;
+    }
+
+    public static String getString(String key) {
+        String o = (String) get(key);
+        return o;
+    }
 }
