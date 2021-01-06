@@ -1,2 +1,1 @@
-# tankwar
-tank war -java
+# tank war-设计模式分支
