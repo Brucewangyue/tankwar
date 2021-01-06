@@ -32,4 +32,12 @@ public class FirstTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void test_02(){
+        Language l = new Language();
+        Man man = new Man(l);
+        System.out.println(l);
+        man.sayHi();
+    }
 }

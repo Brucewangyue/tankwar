@@ -6,7 +6,7 @@ import com.bruce.tank.frame.TankFrame;
 
 import java.awt.*;
 
-public class Bullet {
+public class Bullet extends GameObject {
     private int x;
     private int y;
     private final DirectionEnum dir;
@@ -29,12 +29,33 @@ public class Bullet {
         this.rectangle.height = SrcMgr.tankHeight;
     }
 
+    @Override
     public void paint(Graphics g) {
         if (!detectLiving()) return;
 
         paintImage(g);
         move();
         updateRectangle();
+    }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public int getWidth() {
+        return SrcMgr.bulletWidth;
+    }
+
+    @Override
+    public int getHeight() {
+        return SrcMgr.bulletHeight;
     }
 
     private void move() {
