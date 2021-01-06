@@ -7,7 +7,7 @@ import com.bruce.tank.frame.TankFrame;
 import java.awt.*;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends GameObject {
     private final TankFrame tankFrame;
     private DirectionEnum dir;
     private boolean moving = false;
@@ -18,6 +18,7 @@ public class Tank {
     private int x;
     private int y;
     public Rectangle rectangle = new Rectangle();
+    FireStrategy fireStrategy = new DefaultFireStrategy();
 
     public GroupEnum getGroupEnum() {
         return groupEnum;
@@ -43,6 +44,16 @@ public class Tank {
         return y;
     }
 
+    @Override
+    public int getWidth() {
+        return SrcMgr.tankWidth;
+    }
+
+    @Override
+    public int getHeight() {
+        return SrcMgr.tankHeight;
+    }
+
     public Tank(int x, int y, DirectionEnum dir, TankFrame tankFrame, GroupEnum groupEnum) {
         this.x = x;
         this.y = y;
@@ -51,8 +62,8 @@ public class Tank {
         this.groupEnum = groupEnum;
         this.rectangle.x = x;
         this.rectangle.y = y;
-        this.rectangle.width = SrcMgr.tankWidth;
-        this.rectangle.height = SrcMgr.tankHeight;
+        this.rectangle.width = getWidth();
+        this.rectangle.height = getHeight();
     }
 
     public void paint(Graphics g) {
@@ -86,15 +97,12 @@ public class Tank {
         // boundary detection
         if (x < 2) x = 2;
         if (y < 32) y = 32; // windows top bar height 30
-        if (x > TankFrame.GAME_WIDTH - SrcMgr.tankWidth - 2) x = TankFrame.GAME_WIDTH - SrcMgr.tankWidth - 2;
-        if (y > TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2) y = TankFrame.GAME_HEIGHT - SrcMgr.tankHeight - 2;
+        if (x > TankFrame.GAME_WIDTH - getWidth() - 2) x = TankFrame.GAME_WIDTH - getWidth() - 2;
+        if (y > TankFrame.GAME_HEIGHT - getHeight() - 2) y = TankFrame.GAME_HEIGHT - getHeight() - 2;
     }
 
     public void fire() {
-        int bX = x + SrcMgr.tankWidth / 2 - SrcMgr.bulletWidth / 2;
-        int bY = y + SrcMgr.tankHeight / 2 - SrcMgr.bulletHeight / 2;
-
-        tankFrame.bullets.add(new Bullet(bX, bY, getDir(), tankFrame, groupEnum));
+        fireStrategy.fire(this);
     }
 
     public void die() {

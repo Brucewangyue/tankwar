@@ -8,7 +8,7 @@ import com.bruce.tank.frame.TankFrame;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        TankFrame f = new TankFrame();
+        TankFrame f = TankFrame.getInstance();
 
         int tankCount = PropertiesMgr.getInteger("init-tank-count");
         for (int i = 0; i < tankCount; i++) {

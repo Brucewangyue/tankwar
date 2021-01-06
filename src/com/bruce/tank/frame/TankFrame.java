@@ -15,15 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TankFrame extends Frame {
-    public static final int GAME_WIDTH = 800;
-    public static final int GAME_HEIGHT = 600;
+    private static TankFrame INSTANCE = new TankFrame();
 
-    private Tank myTank = new Tank(200, 200, DirectionEnum.UP, this, GroupEnum.Friend);
-    public List<Bullet> bullets = new ArrayList<>();
-    public List<Tank> enemyTanks = new ArrayList<>();
-    public List<TankExplode> tankExplodes = new ArrayList<>();
-
-    public TankFrame() throws HeadlessException {
+    private TankFrame() throws HeadlessException {
         this.setSize(GAME_WIDTH, GAME_HEIGHT);
         this.setResizable(false);
         this.setTitle("坦克大战");
@@ -36,6 +30,18 @@ public class TankFrame extends Frame {
         this.addKeyListener(new MyKeyListener());
         this.setVisible(true);
     }
+
+    public static TankFrame getInstance() {
+        return INSTANCE;
+    }
+
+    public static final int GAME_WIDTH = 800;
+    public static final int GAME_HEIGHT = 600;
+
+    private Tank myTank = new Tank(200, 200, DirectionEnum.UP, this, GroupEnum.Friend);
+    public List<Bullet> bullets = new ArrayList<>();
+    public List<Tank> enemyTanks = new ArrayList<>();
+    public List<TankExplode> tankExplodes = new ArrayList<>();
 
     /**
      * 集成 Frame 就是为了重写 paint 方法
@@ -88,7 +94,7 @@ public class TankFrame extends Frame {
     private void paintEnemyTankCountText(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString("敌方坦克发数量 " + enemyTanks.size() , 20, 70);
+        g.drawString("敌方坦克发数量 " + enemyTanks.size(), 20, 70);
         g.setColor(c);
     }
 
