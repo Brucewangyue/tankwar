@@ -5,7 +5,6 @@ import com.bruce.tank.enums.GroupEnum;
 import com.bruce.tank.frame.TankFrame;
 
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class Tank extends GameObject {
@@ -19,7 +18,7 @@ public class Tank extends GameObject {
     private int x;
     private int y;
     public Rectangle rectangle = new Rectangle();
-    FireStrategy fireStrategy;
+    private FireStrategy fireStrategy;
 
     public GroupEnum getGroupEnum() {
         return groupEnum;
