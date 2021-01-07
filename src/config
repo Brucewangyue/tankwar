@@ -1,3 +1,6 @@
 #tanks count at initialization
 init-tank-count=10
 tank-move-speed=2
+# fire strategy
+friend-fire=com.bruce.tank.core.FourDirFireStrategy
+enemy-fire=com.bruce.tank.core.DefaultFireStrategy

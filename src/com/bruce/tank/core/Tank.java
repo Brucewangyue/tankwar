@@ -5,6 +5,7 @@ import com.bruce.tank.enums.GroupEnum;
 import com.bruce.tank.frame.TankFrame;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class Tank extends GameObject {
@@ -18,7 +19,7 @@ public class Tank extends GameObject {
     private int x;
     private int y;
     public Rectangle rectangle = new Rectangle();
-    FireStrategy fireStrategy = new DefaultFireStrategy();
+    FireStrategy fireStrategy;
 
     public GroupEnum getGroupEnum() {
         return groupEnum;
@@ -64,6 +65,16 @@ public class Tank extends GameObject {
         this.rectangle.y = y;
         this.rectangle.width = getWidth();
         this.rectangle.height = getHeight();
+
+        fireStrategy = new FourDirFireStrategy();
+
+        try {
+            fireStrategy = groupEnum == GroupEnum.Friend
+                    ? (FireStrategy) Class.forName(PropertiesMgr.getString("friend-fire")).getConstructor().newInstance()
+                    : (FireStrategy) Class.forName(PropertiesMgr.getString("enemy-fire")).getConstructor().newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void paint(Graphics g) {
