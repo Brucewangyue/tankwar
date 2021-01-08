@@ -1,0 +1,162 @@
+package com.bruce.tank.core;
+
+import com.bruce.tank.enums.DirectionEnum;
+import com.bruce.tank.enums.GroupEnum;
+import com.bruce.tank.frame.TankFrame;
+
+import java.awt.*;
+import java.util.Random;
+
+public class Tank extends GameObject {
+    private final TankFrame tankFrame;
+    private DirectionEnum dir;
+    private boolean moving = false;
+    private boolean living = true;
+    private final int moveLength = PropertiesMgr.getInteger("tank-move-speed");
+    private final Random random = new Random();
+    private final GroupEnum groupEnum;
+    private int x;
+    private int y;
+    public Rectangle rectangle = new Rectangle();
+    private FireStrategy fireStrategy;
+
+    public GroupEnum getGroupEnum() {
+        return groupEnum;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public DirectionEnum getDir() {
+        return dir;
+    }
+
+    public void setDir(DirectionEnum dir) {
+        this.dir = dir;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public int getWidth() {
+        return SrcMgr.tankWidth;
+    }
+
+    @Override
+    public int getHeight() {
+        return SrcMgr.tankHeight;
+    }
+
+    public Tank(int x, int y, DirectionEnum dir, TankFrame tankFrame, GroupEnum groupEnum) {
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.tankFrame = tankFrame;
+        this.groupEnum = groupEnum;
+        this.rectangle.x = x;
+        this.rectangle.y = y;
+        this.rectangle.width = getWidth();
+        this.rectangle.height = getHeight();
+
+        fireStrategy = new FourDirFireStrategy();
+
+        try {
+            fireStrategy = groupEnum == GroupEnum.Friend
+                    ? (FireStrategy) Class.forName(PropertiesMgr.getString("friend-fire")).getConstructor().newInstance()
+                    : (FireStrategy) Class.forName(PropertiesMgr.getString("enemy-fire")).getConstructor().newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void paint(Graphics g) {
+        if (!detectLiving()) return;
+
+        randomDir();
+        paintImage(g);
+        randomFire();
+        move();
+        updateRectangle();
+    }
+
+    private void move() {
+        if (!moving && groupEnum == GroupEnum.Friend) return;
+
+        switch (dir) {
+            case LEFT:
+                x -= moveLength;
+                break;
+            case RIGHT:
+                x += moveLength;
+                break;
+            case UP:
+                y -= moveLength;
+                break;
+            case DOWN:
+                y += moveLength;
+                break;
+        }
+
+        // boundary detection
+        if (x < 2) x = 2;
+        if (y < 32) y = 32; // windows top bar height 30
+        if (x > TankFrame.GAME_WIDTH - getWidth() - 2) x = TankFrame.GAME_WIDTH - getWidth() - 2;
+        if (y > TankFrame.GAME_HEIGHT - getHeight() - 2) y = TankFrame.GAME_HEIGHT - getHeight() - 2;
+    }
+
+    public void fire() {
+        fireStrategy.fire(this);
+    }
+
+    public void die() {
+        living = false;
+    }
+
+    private void randomDir() {
+        if (groupEnum == GroupEnum.Enemy && random.nextInt(100) > 97)
+            dir = DirectionEnum.values()[random.nextInt(4)];
+    }
+
+    private void randomFire() {
+        if (groupEnum == GroupEnum.Enemy && random.nextInt(100) > 97)
+            fire();
+    }
+
+    private void paintImage(Graphics g) {
+        switch (dir) {
+            case LEFT:
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankL : SrcMgr.enemyTankL, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankR : SrcMgr.enemyTankR, x, y, null);
+                break;
+            case UP:
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankU : SrcMgr.enemyTankU, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(groupEnum == GroupEnum.Friend ? SrcMgr.tankD : SrcMgr.enemyTankD, x, y, null);
+                break;
+        }
+    }
+
+    private boolean detectLiving() {
+        if (!living) {
+            tankFrame.enemyTanks.remove(this);
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateRectangle() {
+        this.rectangle.x = x;
+        this.rectangle.y = y;
+    }
+}
